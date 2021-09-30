@@ -23,6 +23,7 @@ namespace UserMaintenance
             listBox1.ValueMember = "ID";
             listBox1.DisplayMember = "FullName";
             button2.Text = "Fájlba írás";
+            button3.Text = "Törlés";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,6 +56,12 @@ namespace UserMaintenance
 
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var s = listBox1.SelectedItem;
+            users.Remove((User)s);
         }
     }
 }
