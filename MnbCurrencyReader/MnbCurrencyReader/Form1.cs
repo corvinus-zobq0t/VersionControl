@@ -17,17 +17,33 @@ namespace MnbCurrencyReader
     public partial class Form1 : Form
     {
         private BindingList<RateData> Rates;
+        private BindingList<string> Currencies;
         public Form1()
         {
             InitializeComponent();
+            RefreshData();
+            
 
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            InitializeComponent();
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            Rates.Clear();
             GetExchangeRates();
+            GetCurrencies();
+            CreateChart();
             Rates = new BindingList<RateData>();
+            Currencies = new BindingList<string>();
             ratesdgw.DataSource = Rates;
+
+        }
+
+        private void CreateChart()
+        {
             chartRates.DataSource = Rates;
             var series = chartRates.Series[0];
             series.ChartType = SeriesChartType.Line;
@@ -69,9 +85,40 @@ namespace MnbCurrencyReader
                 if (unit != 0)
                     rate.Value = value / unit;
             }
+            
+
+        }
+        private void GetCurrencies()
+        {
+            MNBArfolyamServiceSoapClient mnbService = new MNBArfolyamServiceSoapClient();
+            GetCurrenciesRequestBody request = new GetCurrenciesRequestBody();
+            var response = mnbService.GetCurrencies(request);
+            var result = response.GetCurrenciesResult;
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(result);
+            foreach (XmlElement item in xml.DocumentElement.ChildNodes[0])
+            {
+                string newItem = item.InnerText;
+                Currencies.Add(newItem);
+            }
+            comboBox1.DataSource = Currencies;
 
         }
 
-        
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
     }
 }
