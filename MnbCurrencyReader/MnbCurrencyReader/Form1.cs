@@ -9,31 +9,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 
 namespace MnbCurrencyReader
 {
     public partial class Form1 : Form
     {
+        private BindingList<RateData> Rates;
         public Form1()
         {
             InitializeComponent();
+
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            InitializeComponent();
             GetExchangeRates();
+            Rates = new BindingList<RateData>();
             ratesdgw.DataSource = Rates;
-            xmlReader();
-            
+            chartRates.DataSource = Rates;
+            var series = chartRates.Series[0];
+            series.ChartType = SeriesChartType.Line;
+            series.XValueMember = "Date";
+            series.YValueMembers = "Value";
+            series.BorderWidth = 2;
+
+            var legend = chartRates.Legends[0];
+            legend.Enabled = false;
+
+            var chartArea = chartRates.ChartAreas[0];
+            chartArea.AxisX.MajorGrid.Enabled = false;
+            chartArea.AxisY.MajorGrid.Enabled = false;
+            chartArea.AxisY.IsStartedFromZero = false;
         }
 
-
-        private BindingList<RateData> Rates;
         private void GetExchangeRates()
         {
             var mnbService = new MNBArfolyamServiceSoapClient();
             var request = new GetExchangeRatesRequestBody()
             {
-                currencyNames = "EUR",
-                startDate = "2020-01-01",
-                endDate = "2020-06-30"
+                currencyNames = comboBox1.SelectedItem.ToString(),
+                startDate = dateTimePicker1.Value.ToString(),
+                endDate = dateTimePicker2.Value.ToString()
             };
             var response = mnbService.GetExchangeRates(request);
             var result = response.GetExchangeRatesResult;
@@ -53,5 +71,7 @@ namespace MnbCurrencyReader
             }
 
         }
+
+        
     }
 }
