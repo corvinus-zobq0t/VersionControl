@@ -35,9 +35,9 @@
             // ratesdgw
             // 
             this.ratesdgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ratesdgw.Location = new System.Drawing.Point(0, 0);
+            this.ratesdgw.Location = new System.Drawing.Point(12, 57);
             this.ratesdgw.Name = "ratesdgw";
-            this.ratesdgw.Size = new System.Drawing.Size(240, 150);
+            this.ratesdgw.Size = new System.Drawing.Size(284, 381);
             this.ratesdgw.TabIndex = 0;
             // 
             // Form1
