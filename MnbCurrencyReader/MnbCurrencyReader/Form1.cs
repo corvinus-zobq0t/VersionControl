@@ -1,4 +1,5 @@
-﻿using MnbCurrencyReader.MnbServiceReference;
+﻿using MnbCurrencyReader.Entities;
+using MnbCurrencyReader.MnbServiceReference;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,8 +18,9 @@ namespace MnbCurrencyReader
         {
             InitializeComponent();
             GetExchangeRates();
+            ratesdgw.DataSource = Rates;
         }
-
+        private BindingList<RateData> Rates;
         private void GetExchangeRates()
         {
             var mnbService = new MNBArfolyamServiceSoapClient();
