@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using UnitTestExample.Controllers;
+using UnitTestExample.Abstractions;
+using UnitTestExample.Entities;
+
 
 namespace UnitTestExample.Test
 {
@@ -41,15 +44,6 @@ namespace UnitTestExample.Test
 
         }
 
-        public bool PasswordValidate(string password)
-        {
-            var LowerCase = new Regex(@"[a-z]+");
-            var UpperCase = new Regex(@"[A-Z]+");
-            var Number = new Regex(@"[0-9]+");
-            var EightChar = new Regex(@".{8,}");
-            return LowerCase.IsMatch(password)&&UpperCase.IsMatch(password)&&Number.IsMatch(password)&&EightChar.IsMatch(password);
-
-        }
         [
             Test,
             TestCase("irf@uni-corvinus.hu", "Abcd1234"),
@@ -67,6 +61,28 @@ namespace UnitTestExample.Test
             Assert.AreEqual(email, actualResult.Email);
             Assert.AreEqual(password, actualResult.Password);
             Assert.AreNotEqual(Guid.Empty, actualResult.ID);
+        }
+        [
+            Test,
+            TestCase("irf@uni-corvinus", "Abcd1234"),
+            TestCase("irf.uni-corvinus.hu", "Abcd1234"),
+            TestCase("irf@uni-corvinus.hu", "abcd1234"),
+            TestCase("irf@uni-corvinus.hu", "ABCD1234"),
+            TestCase("irf@uni-corvinus.hu", "abcdABCD"),
+            TestCase("irf@uni-corvinus.hu", "Ab1234"),
+    ]
+        public void TestRegisterValidateException(string email, string password)
+        {
+            var accountController = new AccountController();
+            try
+            {
+                var actualResult = accountController.Register(email, password);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOf<ValidationException>(ex);
+            }
         }
 
 
