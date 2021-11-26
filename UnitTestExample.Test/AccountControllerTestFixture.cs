@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using UnitTestExample.Controllers;
@@ -37,6 +38,16 @@ namespace UnitTestExample.Test
             var accountController = new AccountController();
             var actualResult = accountController.ValidatePassword(password);
             Assert.AreEqual(expectedResult, actualResult);
+
+        }
+
+        public bool PasswordValidate(string password)
+        {
+            var LowerCase = new Regex(@"[a-z]+");
+            var UpperCase = new Regex(@"[A-Z]+");
+            var Number = new Regex(@"[0-9]+");
+            var EightChar = new Regex(@".{8,}");
+            return LowerCase.IsMatch(password)&&UpperCase.IsMatch(password)&&Number.IsMatch(password)&&EightChar.IsMatch(password);
 
         }
 
