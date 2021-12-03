@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mikroszimulacio_week9.Entities
 {
-    internal class DeathProbability
+    public class DeathProbability
     {
         public Gender Gender { get; set; }
         public int Kor { get; set; }
