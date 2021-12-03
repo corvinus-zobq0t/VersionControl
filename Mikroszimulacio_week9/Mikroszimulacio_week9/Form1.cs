@@ -17,6 +17,8 @@ namespace Mikroszimulacio_week9
         List<Person> Population = new List<Person>();
         List<BirthProbability> BirthProbabilities = new List<BirthProbability>();
         List<DeathProbability> DeathProbabilities = new List<DeathProbability>();
+        List<int> ferfiak = new List<int>();
+        List<int> nok = new List<int>();
         Random rng = new Random(1234);
         public Form1()
         {
@@ -88,7 +90,7 @@ namespace Mikroszimulacio_week9
                 
                 for (int i = 0; i < Population.Count; i++)
                 {
-                    SimStep();
+                    SimStep(year, Population[i]);
                 }
 
                 int nbrOfMales = (from x in Population
@@ -97,8 +99,9 @@ namespace Mikroszimulacio_week9
                 int nbrOfFemales = (from x in Population
                                     where x.Gender == Gender.Female && x.IsAlive
                                     select x).Count();
-                Console.WriteLine(
-                    string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+                ferfiak.Add(nbrOfMales);
+                nok.Add(nbrOfFemales);
+
             }
         }
         private void SimStep(int year, Person person)
@@ -137,6 +140,28 @@ namespace Mikroszimulacio_week9
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+                textBox1.Text = ofd.FileName;
+            Population = GetPopulation(textBox1.Text);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Simulate();
+            DisplayResults();
+        }
+
+        private void DisplayResults()
+        {
+            for (int i = 2005; i < numericUpDown1.Value; i++)
+            {
+                richTextBox1.Text += "Szimulációs év:" + i.ToString() + "\n" +"\t" + "Fiúk:" + ferfiak[i - 2005] + "\n" + "\t" + "Lányok:" + nok[i - 2005] + "\n";
+            }
         }
     }
 }
