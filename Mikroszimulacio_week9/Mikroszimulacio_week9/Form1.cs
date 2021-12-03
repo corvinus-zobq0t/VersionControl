@@ -88,7 +88,7 @@ namespace Mikroszimulacio_week9
                 
                 for (int i = 0; i < Population.Count; i++)
                 {
-                    
+                    SimStep();
                 }
 
                 int nbrOfMales = (from x in Population
@@ -99,6 +99,39 @@ namespace Mikroszimulacio_week9
                                     select x).Count();
                 Console.WriteLine(
                     string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+            }
+        }
+        private void SimStep(int year, Person person)
+        {
+           
+            if (!person.IsAlive) return;
+
+            
+            byte age = (byte)(year - person.BirthYear);
+
+
+            double pDeath = (from x in DeathProbabilities
+                             where x.Gender == person.Gender && x.Kor == age
+                             select x.halp).FirstOrDefault();
+            
+            if (rng.NextDouble() <= pDeath)
+                person.IsAlive = false;
+
+
+            if (person.IsAlive && person.Gender == Gender.Female)
+            {
+
+                double pBirth = (from x in BirthProbabilities
+                                 where x.Kor == age
+                                 select x.szulp).FirstOrDefault();
+                if (rng.NextDouble() <= pBirth)
+                {
+                    Person újszülött = new Person();
+                    újszülött.BirthYear = year;
+                    újszülött.NbrOfChildren = 0;
+                    újszülött.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(újszülött);
+                }
             }
         }
         private void Form1_Load(object sender, EventArgs e)
