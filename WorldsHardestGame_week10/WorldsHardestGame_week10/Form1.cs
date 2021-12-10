@@ -26,6 +26,7 @@ namespace WorldsHardestGame_week10
             ga = gc.ActivateDisplay();
             this.Controls.Add(ga);
             gc.GameOver += Gc_GameOver;
+            button1.Visible = false;
             for (int i = 0; i <= populationSize; i++)
             {
                 gc.AddPlayer(nbrOfSteps);
